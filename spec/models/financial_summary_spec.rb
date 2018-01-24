@@ -4,6 +4,7 @@ describe FinancialSummary do
   let!(:user) { create(:user) }
 
   # Feel free to change what the subject-block returns
+  subject(:cad) { FinancialSummary.new(user_id: user.id, currency: :cad) }
   subject { FinancialSummary.new(user_id: user.id, currency: :usd) }
 
   it 'summarizes over one day' do
@@ -33,6 +34,9 @@ describe FinancialSummary do
 
     expect(subject.one_day.count(:refund)).to eq(0)
     expect(subject.one_day.amount(:refund)).to eq(Money.from_amount(0, :usd))
+
+    expect(cad.one_day.count(:refund)).to eq(1)
+    expect(cad.one_day.amount(:refund)).to eq(Money.from_amount(5, :cad))
   end
 
   it 'summarizes over seven days' do
@@ -68,6 +72,9 @@ describe FinancialSummary do
 
     expect(subject.seven_days.count(:refund)).to eq(0)
     expect(subject.seven_days.amount(:refund)).to eq(Money.from_amount(0, :usd))
+
+    expect(cad.seven_days.count(:refund)).to eq(0)
+    expect(cad.seven_days.amount(:refund)).to eq(Money.from_amount(0, :cad))
   end
 
   it 'summarizes over lifetime' do
@@ -107,6 +114,9 @@ describe FinancialSummary do
 
     expect(subject.lifetime.count(:refund)).to eq(1)
     expect(subject.lifetime.amount(:refund)).to eq(Money.from_amount(13.45, :usd))
+
+    expect(cad.lifetime.count(:refund)).to eq(1)
+    expect(cad.lifetime.amount(:refund)).to eq(Money.from_amount(5, :cad))
 
     expect(subject.lifetime.count(:withdraw)).to eq(1)
     expect(subject.lifetime.amount(:withdraw)).to eq(Money.from_amount(-7.67, :usd))
