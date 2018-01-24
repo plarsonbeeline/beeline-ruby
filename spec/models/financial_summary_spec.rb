@@ -45,6 +45,24 @@ describe FinancialSummary do
              amount: Money.from_amount(4, :cad))
     end
 
+    expect(subject.one_day.user_id).to eq(user.id)
+    expect(subject2.one_day.user_id).to eq(user2.id)
+    expect(cad.one_day.user_id).to eq(user.id)
+    expect(cad2.one_day.user_id).to eq(user2.id)
+
+    expect(subject.one_day.currency).to eq(Money::Currency.wrap(:usd))
+    expect(subject2.one_day.currency).to eq(Money::Currency.wrap(:usd))
+    expect(cad.one_day.currency).to eq(Money::Currency.wrap(:cad))
+    expect(cad2.one_day.currency).to eq(Money::Currency.wrap(:cad))
+
+    expect(subject.one_day.after_at).to_not be_nil
+    expect(subject2.one_day.after_at).to_not be_nil
+    expect(cad.one_day.after_at).to_not be_nil
+    expect(cad2.one_day.after_at).to_not be_nil
+
+    expect(subject.one_day.count(:missing)).to eq(0)
+    expect(subject.one_day.amount(:missing)).to eq(Money.from_amount(0.0, :usd))
+
     expect(subject.one_day.count(:deposit)).to eq(2)
     expect(subject.one_day.amount(:deposit)).to eq(Money.from_amount(12.12, :usd))
 
@@ -114,6 +132,24 @@ describe FinancialSummary do
              action: :credit, category: :refund,
              amount: Money.from_amount(4, :cad))
     end
+
+    expect(subject.seven_days.user_id).to eq(user.id)
+    expect(subject2.seven_days.user_id).to eq(user2.id)
+    expect(cad.seven_days.user_id).to eq(user.id)
+    expect(cad2.seven_days.user_id).to eq(user2.id)
+
+    expect(subject.seven_days.currency).to eq(Money::Currency.wrap(:usd))
+    expect(subject2.seven_days.currency).to eq(Money::Currency.wrap(:usd))
+    expect(cad.seven_days.currency).to eq(Money::Currency.wrap(:cad))
+    expect(cad2.seven_days.currency).to eq(Money::Currency.wrap(:cad))
+
+    expect(subject.seven_days.after_at).to_not be_nil
+    expect(subject2.seven_days.after_at).to_not be_nil
+    expect(cad.seven_days.after_at).to_not be_nil
+    expect(cad2.seven_days.after_at).to_not be_nil
+
+    expect(subject.seven_days.count(:missing)).to eq(0)
+    expect(subject.seven_days.amount(:missing)).to eq(Money.from_amount(0.0, :usd))
 
     expect(subject.seven_days.count(:deposit)).to eq(2)
     expect(subject.seven_days.amount(:deposit)).to eq(Money.from_amount(12.12, :usd))
@@ -192,6 +228,24 @@ describe FinancialSummary do
              action: :credit, category: :refund,
              amount: Money.from_amount(12.45, :usd))
     end
+
+    expect(subject.lifetime.user_id).to eq(user.id)
+    expect(subject2.lifetime.user_id).to eq(user2.id)
+    expect(cad.lifetime.user_id).to eq(user.id)
+    expect(cad2.lifetime.user_id).to eq(user2.id)
+
+    expect(subject.lifetime.currency).to eq(Money::Currency.wrap(:usd))
+    expect(subject2.lifetime.currency).to eq(Money::Currency.wrap(:usd))
+    expect(cad.lifetime.currency).to eq(Money::Currency.wrap(:cad))
+    expect(cad2.lifetime.currency).to eq(Money::Currency.wrap(:cad))
+
+    expect(subject.lifetime.after_at).to be_nil
+    expect(subject2.lifetime.after_at).to be_nil
+    expect(cad.lifetime.after_at).to be_nil
+    expect(cad2.lifetime.after_at).to be_nil
+
+    expect(subject.lifetime.count(:missing)).to eq(0)
+    expect(subject.lifetime.amount(:missing)).to eq(Money.from_amount(0.0, :usd))
 
     expect(subject.lifetime.count(:deposit)).to eq(2)
     expect(subject.lifetime.amount(:deposit)).to eq(Money.from_amount(12.12, :usd))
