@@ -6,7 +6,7 @@ class FinancialSummary
 
   attr_accessor :user_id, :currency
 
-  def report(duration = nil)
+  def report(after_at = nil)
     report = Transaction
                  .select('transactions.category, count(*) as num')
                  .select("SUM(CASE WHEN transactions.action = 'debit' THEN transactions.amount_cents * -1.0
@@ -14,13 +14,13 @@ class FinancialSummary
                                    END) as amount")
                  .group(:category)
                  .where(user_id: user_id, amount_currency: currency.iso_code)
-    report = report.where('created_at >= ?', duration) if duration.present?
+    report = report.where('created_at >= ?', after_at) if after_at.present?
     counts = report.collect { |c| [ c['category'].to_sym, c['num'] ] }
     amounts = report.collect { |c| [ c['category'].to_sym, Money.new(c['amount'], currency) ] }
     FinancialReport.new(
         user_id: user_id,
         currency: currency,
-        duration: duration,
+        after_at: after_at,
         counts: Hash[*counts.flatten],
         amounts: Hash[*amounts.flatten]
     )
