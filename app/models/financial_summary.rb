@@ -9,9 +9,9 @@ class FinancialSummary
   def report(after_at = nil)
     report = Transaction
                  .select('transactions.category, count(*) as num')
-                 .select("SUM(CASE WHEN transactions.action = 'debit' THEN transactions.amount_cents * -1.0
-                                   ELSE transactions.amount_cents
-                                   END) as amount")
+                 .select("sum(case when transactions.action = 'debit' then transactions.amount_cents * -1.0
+                                   else transactions.amount_cents
+                                   end) as amount")
                  .group(:category)
                  .where(user_id: user_id, amount_currency: currency.iso_code)
     report = report.where('created_at >= ?', after_at) if after_at.present?
